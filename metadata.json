@@ -1,0 +1,5 @@
+{
+  "name": "TaskQuest: Tileboard RPG",
+  "description": "A gamified task management system where tasks are tiles on an expanding board game. Explore your project like a dungeon crawler.",
+  "requestFramePermissions": []
+}
