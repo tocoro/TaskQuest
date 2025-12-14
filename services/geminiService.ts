@@ -66,6 +66,50 @@ export async function generateNextTasks(
   }
 }
 
+export async function generateCampaign(
+    startTaskTitle: string,
+    goalDescription: string,
+    milestones: string,
+    language: Language = 'ja'
+): Promise<NewTaskSuggestion[]> {
+    try {
+        const langInstruction = language === 'ja'
+            ? "Respond strictly in Japanese."
+            : "Respond in English.";
+
+        const prompt = `
+            You are a Dungeon Master designing a quest line (campaign) for a productivity RPG.
+            Start Point: "${startTaskTitle}".
+            Ultimate Goal: "${goalDescription}".
+            Intermediate Milestones: "${milestones}".
+
+            Generate a linear or slightly branching sequence of 3 to 6 tasks that connect the start point to the goal, incorporating the milestones.
+            The tasks should progress logically from start to finish.
+            The last task should be the Goal itself.
+            ${langInstruction}
+        `;
+
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: taskSchema,
+                systemInstruction: `You are a Level Designer for a productivity RPG. ${langInstruction}`,
+            },
+        });
+
+        if (response.text) {
+            const data = JSON.parse(response.text);
+            return data.tasks || [];
+        }
+        return [];
+    } catch (error) {
+        console.error("Failed to generate campaign:", error);
+        return [];
+    }
+}
+
 export async function getGameFlavorText(action: 'complete' | 'move', taskTitle: string, language: Language = 'ja'): Promise<string> {
    try {
     const langInstruction = language === 'ja' 

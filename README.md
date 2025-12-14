@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# TASKQUEST: Solitaire Task RPG
 
-# Run and deploy your AI Studio app
+**TaskQuest** is a productivity application that gamifies task management by treating your to-do list as a dungeon crawler board game.
 
-This contains everything you need to run your app locally.
+## The Core Loop: "Solitaire RPG"
 
-View your app in AI Studio: https://ai.studio/apps/drive/1glrNT-abOlWhxoXsvtzSqHRBzBPrX0Hm
+This app is designed around a unique "Solitaire" concept where you play two roles: the **Game Master (GM)** and the **Player**.
 
-## Run Locally
+### 1. GM Mode (The Planning Phase)
+*   **Role:** Architect, Strategist.
+*   **Goal:** Design the "Dungeon" of tasks.
+*   **Actions:**
+    *   Break down large goals into smaller node networks using the "Breakdown" tool.
+    *   Connect tasks logically to create paths.
+    *   Use GenAI to generate campaigns or suggestions.
+    *   **Save Campaign:** Save your constructed task network as a "Scenario".
 
-**Prerequisites:**  Node.js
+### 2. Player Mode (The Execution Phase)
+*   **Role:** Adventurer.
+*   **Goal:** Conquer the dungeon by completing tasks.
+*   **Actions:**
+    *   Move your pawn node-by-node.
+    *   Complete tasks to earn XP and level up.
+    *   "Scout" adjacent areas (GenAI) if you get stuck or need new tasks dynamically.
+    *   **Save Progress:** Save your current character stats (XP, Level) and position.
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+By switching between these modes, you plan your day/project objectively (GM), then immerse yourself in execution (Player), turning mundane work into a quest for progress.

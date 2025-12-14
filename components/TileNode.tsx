@@ -8,17 +8,25 @@ interface TileNodeProps {
   isPawnHere: boolean;
   language: Language;
   onClick: (id: string) => void;
+  flags: Record<string, boolean>; // Add flags prop
 }
 
-export const TileNode: React.FC<TileNodeProps> = ({ node, isFocused, isPawnHere, language, onClick }) => {
+export const TileNode: React.FC<TileNodeProps> = ({ node, isFocused, isPawnHere, language, onClick, flags }) => {
   const text = UI_TEXT[language];
+
+  // Conditional Logic
+  const isLocked = node.requiredFlag && !flags[node.requiredFlag];
+  const showConditionalContent = node.conditionFlag && flags[node.conditionFlag];
+  const displayTitle = showConditionalContent ? (node.conditionTitle || node.title) : node.title;
 
   // Calculate distinct visual styles based on status
   const getStatusColor = () => {
+    if (isLocked) return 'bg-slate-900 border-red-900 text-red-900 opacity-60'; // Locked visual
     if (node.status === 'completed') return 'bg-emerald-900 border-emerald-500 text-emerald-100';
     if (node.status === 'locked') return 'bg-gray-800 border-gray-600 text-gray-500 opacity-70';
     if (node.type === 'boss') return 'bg-red-900 border-red-500 text-red-100';
     if (node.type === 'start') return 'bg-indigo-900 border-indigo-500 text-indigo-100';
+    if (node.type === 'blank') return 'bg-slate-950/50 border-slate-700/50 text-transparent'; // Blank
     return 'bg-slate-800 border-slate-500 text-slate-200'; // available
   };
 
@@ -44,17 +52,32 @@ export const TileNode: React.FC<TileNodeProps> = ({ node, isFocused, isPawnHere,
         height: TILE_SIZE,
       }}
     >
-      <div className="text-[10px] font-bold tracking-widest uppercase opacity-60 mb-1">
-        {node.type === 'start' ? text.base : `${text.lvl} ${node.difficulty}`}
-      </div>
-      <div className="text-center font-bold text-xs leading-tight line-clamp-3">
-        {node.title}
-      </div>
+      {node.type !== 'blank' && (
+        <>
+            <div className="text-[10px] font-bold tracking-widest uppercase opacity-60 mb-1">
+                {isLocked ? "LOCKED" : (node.type === 'start' ? text.base : `${text.lvl} ${node.difficulty}`)}
+            </div>
+            <div className="text-center font-bold text-xs leading-tight line-clamp-3">
+                {displayTitle}
+            </div>
+            
+            {node.status === 'completed' && (
+                <div className="absolute -top-2 -right-2 bg-emerald-500 text-black rounded-full p-1 w-6 h-6 flex items-center justify-center text-xs font-bold border-2 border-white">
+                ✓
+                </div>
+            )}
+
+            {isLocked && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg">
+                    <span className="text-2xl">🔒</span>
+                </div>
+            )}
+        </>
+      )}
       
-      {node.status === 'completed' && (
-        <div className="absolute -top-2 -right-2 bg-emerald-500 text-black rounded-full p-1 w-6 h-6 flex items-center justify-center text-xs font-bold border-2 border-white">
-          ✓
-        </div>
+      {/* Blank Node Visual Indicator (Simple Connector) */}
+      {node.type === 'blank' && (
+          <div className="w-2 h-2 bg-slate-600 rounded-full opacity-50"></div>
       )}
     </div>
   );

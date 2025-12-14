@@ -12,9 +12,18 @@ export interface TaskNode {
   description: string;
   status: 'locked' | 'available' | 'completed';
   position: GridPosition;
-  type: 'start' | 'task' | 'boss';
+  type: 'start' | 'task' | 'boss' | 'blank';
   difficulty: number; // 1-5, determines XP
   generatedFrom?: string; // ID of the parent node
+  
+  // Logic & Flags
+  requiredFlag?: string;    // Flag required to enter/traverse this node
+  onCompleteFlag?: string;  // Flag to set true when completed
+  
+  // Conditional Content
+  conditionFlag?: string;   // If this flag is active...
+  conditionTitle?: string;  // ...show this title
+  conditionDesc?: string;   // ...and this description
 }
 
 export interface Edge {
@@ -35,6 +44,8 @@ export interface GameState {
   level: number;
   camera: { x: number; y: number };
   settings: Settings;
+  isGmMode: boolean;
+  flags: Record<string, boolean>; // Global flag state
 }
 
 export interface NewTaskSuggestion {
